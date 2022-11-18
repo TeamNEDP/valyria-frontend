@@ -206,7 +206,11 @@ function Row(props) {
                     variant="contained"
                     endIcon={<SendIcon />}
                     onClick={() => {
-                      navigate("/battle?id=" + row.id);
+                      if (row.status === "finished") {
+                        navigate("/battle?id=" + row.id);
+                      } else if (row.status === "running") {
+                        navigate("/battle_stream?id=" + row.id);
+                      }
                     }}
                   >
                     复盘

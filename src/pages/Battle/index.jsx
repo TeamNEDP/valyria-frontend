@@ -1,266 +1,36 @@
-import { Stage, Layer, Rect, Shape, Text, Image, Group } from "react-konva";
+import { Stage, Layer, Rect, Text, Image, Group } from "react-konva";
 import React, { Component, useState } from "react";
 import useImage from "use-image";
 import { useEffect } from "react";
-import { useRecoilValue } from "recoil";
-import { rendering_id } from "@/state/rendering";
 import { get_games_details } from "../../api/battle_api";
 import { useSearchParams } from "react-router-dom";
+import {draw} from "@/components/GameFunctions"
+
 
 let map;
 let ticks;
 const Gx = window.innerWidth / 10;
 const Gy = window.innerHeight / 10;
 
-function draw(i, j, size, type, soldiers) {
-  switch (type) {
-    case "M":
-      return <ShanImage x={i} y={j} size={size} />;
-    case "C":
-      return <ChenbaoImage x={i} y={j} size={size} num={soldiers} />;
-    case "R":
-      return <WangguanImage_red x={i} y={j} size={size} num={soldiers} />;
-    case "B":
-      return <WangguanImage_blue x={i} y={j} size={size} num={soldiers} />;
-    case "CR":
-      return <ChenbaoImage_red x={i} y={j} size={size} num={soldiers} />;
-    case "CB":
-      return <ChenbaoImage_blue x={i} y={j} size={size} num={soldiers} />;
-    case "LR":
-      return <Plaid_red x={i} y={j} size={size} num={soldiers} />;
-    case "LB":
-      return <Plaid_blue x={i} y={j} size={size} num={soldiers} />;
-  }
-}
 
 const Judge = (props) => {
-  const tick = props.tick;
-  console.log(tick);
+  let tick = props.tick;
 
   useEffect(() => {
-    if (tick >= ticks.length) return;
-    if (ticks[tick].changes === undefined || ticks[tick].changes === null) {
+    if (tick == null) return;
+    if (tick.changes === undefined || tick.changes === null) {
       return;
     }
-    for (const change of ticks[tick].changes) {
+    for (const change of tick.changes) {
       //更新地图指定格的状态
-      console.log(ticks[tick].changes.length);
+      console.log(tick.changes.length);
       map.grids[change.x * map.width + change.y].type = change.grid.type;
       map.grids[change.x * map.width + change.y].soldiers =
-        change.grid.soldiers;
+      change.grid.soldiers;
     }
   }, [props.tick]);
 
   return <></>;
-};
-
-const ShanImage = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const [image] = useImage("http://www.yvmu.top/img/neutrality/mountain.png");
-  return (
-    <>
-      <Image
-        image={image}
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-      />
-    </>
-  );
-};
-
-const WangguanImage_red = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const num = param.num;
-  const [image] = useImage("http://www.yvmu.top/img/red/Crown.png");
-  return (
-    <>
-      <Image
-        image={image}
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-      />
-      <Text
-        x={Gx + xx * size + size / 4}
-        y={Gy + yy * size + size / 4}
-        text={num}
-        fontSize={size / 2}
-        fontFamily="serif"
-        fill="white"
-      />
-    </>
-  );
-};
-
-const WangguanImage_blue = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const num = param.num;
-  const [image] = useImage("http://www.yvmu.top/img/blue/crown.png");
-  return (
-    <>
-      <Image
-        image={image}
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-      />
-      <Text
-        x={Gx + xx * size + size / 4}
-        y={Gy + yy * size + size / 4}
-        text={num}
-        fontSize={size / 2}
-        fontFamily="serif"
-        fill="white"
-      />
-    </>
-  );
-};
-
-const ChenbaoImage_red = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const num = param.num;
-  const [image] = useImage("http://www.yvmu.top/img/red/castle.png");
-  return (
-    <>
-      <Image
-        image={image}
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-      />
-      <Text
-        x={Gx + xx * size + size / 4}
-        y={Gy + yy * size + size / 4}
-        text={num}
-        fontSize={size / 2}
-        fontFamily="serif"
-        fill="white"
-      />
-    </>
-  );
-};
-
-const ChenbaoImage_blue = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const num = param.num;
-  const [image] = useImage("http://www.yvmu.top/img/blue/castle.png");
-  return (
-    <>
-      <Image
-        image={image}
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-      />
-      <Text
-        x={Gx + xx * size + size / 4}
-        y={Gy + yy * size + size / 4}
-        text={num}
-        fontSize={size / 2}
-        fontFamily="serif"
-        fill="white"
-      />
-    </>
-  );
-};
-
-const ChenbaoImage = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const num = param.num;
-  const [image] = useImage("http://www.yvmu.top/img/neutrality/Castle.png");
-  return (
-    <>
-      <Image
-        image={image}
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-      />
-      <Text
-        x={Gx + xx * size + size / 4}
-        y={Gy + yy * size + size / 4}
-        text={num}
-        fontSize={size / 2}
-        fontFamily="serif"
-        fill="white"
-      />
-    </>
-  );
-};
-
-const Plaid_red = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const num = param.num;
-  return (
-    <>
-      <Rect
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-        fill="red"
-        stroke="black"
-        strokeWidth={0.5}
-      />
-      <Text
-        x={Gx + xx * size + size / 4}
-        y={Gy + yy * size + size / 4}
-        text={num}
-        fontSize={size / 2}
-        fontFamily="serif"
-        fill="white"
-      />
-    </>
-  );
-};
-
-const Plaid_blue = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const num = param.num;
-  return (
-    <>
-      <Rect
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-        fill="blue"
-        stroke="black"
-        strokeWidth={0.5}
-      />
-      <Text
-        x={Gx + xx * size + size / 4}
-        y={Gy + yy * size + size / 4}
-        text={num}
-        fontSize={size / 2}
-        fontFamily="serif"
-        fill="white"
-      />
-    </>
-  );
 };
 
 class Board extends Component {
@@ -315,7 +85,7 @@ class Game extends Component {
   render() {
     return (
       <>
-        <Judge tick={this.props.tick} />
+        <Judge tick={ticks[this.props.tick]} />
       </>
     );
   }

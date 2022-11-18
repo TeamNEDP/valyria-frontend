@@ -22,6 +22,7 @@ import { Container } from '@mui/system';
 import GlobalMessage from './components/GlobalMeaage';
 import DefaultState from './components/DefaultState';
 import UserScripts from './pages/UserScripts';
+import BattleStream from './pages/BattleStream';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
               <Route path='/rank' element={<Rank />} />
               <Route path='/profile' element={<UserProfile />} />
               <Route path='/scripts' element={<UserScripts />} />
+              <Route path='/battle_stream' element={<BattleStream />} />
             </Routes>
           </Container>
         </HashRouter>
