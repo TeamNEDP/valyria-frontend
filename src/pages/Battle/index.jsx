@@ -7,10 +7,12 @@ import { rendering_id } from "@/state/rendering";
 import { get_games_details } from "../../api/battle_api";
 import { useSearchParams } from "react-router-dom";
 
+let Data;
 let map;
 let ticks;
 const Gx = window.innerWidth / 10;
 const Gy = window.innerHeight / 10;
+let timer= undefined;
 
 function draw(i, j, size, type, soldiers) {
   switch (type) {
@@ -38,7 +40,7 @@ const Judge = (props) => {
   console.log(tick);
 
   useEffect(() => {
-    if (tick >= ticks.length) return;
+    if (tick >= ticks.length || tick < 0) return;
     if (ticks[tick].changes === undefined || ticks[tick].changes === null) {
       return;
     }
@@ -321,20 +323,51 @@ class Game extends Component {
   }
 }
 
+/* 延时函数(length, setState) {
+  for(var i = 0; i < length; ++i) {
+    setState(i);
+
+    wait(200);
+  }
+  setState(i)
+} */
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tick: 0,
+      tick: -1,
+      secondsElapsed: 0
     };
   }
+  record = () => {
+    this.setState({
+      tick: this.state.tick+1
+    })
+    console.log("timer");
+  }
+  timerStart= () => {
+    timer = setInterval(() => this.record(), 100);
+  }
+  timerStop= () => {
+    clearInterval(timer);
+  }
+
   render() {
+    var isEnded = false;
+    if(this.state.tick < ticks.length - 1) {
+      
+    }else {
+      this.timerStop();
+      isEnded = true;
+    }
+
     return (
       <>
         <div>
-          <button onClick={() => this.setState({ tick: this.state.tick + 1 })}>
-            第 {this.state.tick} 步
-          </button>
+        <button onClick={this.timerStart}>timerStart</button>
+        <button onClick={this.timerStop}>timerStop</button>
+        {isEnded ? Data.data.result.winner+"胜利" : ""}
         </div>
         <Stage width={1238} height={window.innerHeight}>
           <Layer>
@@ -351,10 +384,14 @@ const Battle = () => {
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const contestId = searchParams.get("id");
+
+  // 调用延时(setState)
+
   useEffect(() => {
     (async () => {
       let data = await get_games_details(contestId);
       console.log(data);
+      Data=data;
       map = data.data.map;
       ticks = data.data.ticks;
       setLoading(false);
