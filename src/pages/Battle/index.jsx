@@ -7,10 +7,12 @@ import { rendering_id } from "@/state/rendering";
 import { get_games_details } from "../../api/battle_api";
 import { useSearchParams } from "react-router-dom";
 
+let Data;
 let map;
 let ticks;
 const Gx = window.innerWidth / 10;
 const Gy = window.innerHeight / 10;
+let timer= undefined;
 
 function draw(i, j, size, type, soldiers) {
   switch (type) {
@@ -38,7 +40,7 @@ const Judge = (props) => {
   console.log(tick);
 
   useEffect(() => {
-    if (tick >= ticks.length) return;
+    if (tick >= ticks.length || tick < 0) return;
     if (ticks[tick].changes === undefined || ticks[tick].changes === null) {
       return;
     }
@@ -371,10 +373,14 @@ const Battle = () => {
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const contestId = searchParams.get("id");
+
+  // 调用延时(setState)
+
   useEffect(() => {
     (async () => {
       let data = await get_games_details(contestId);
       console.log(data);
+      Data=data;
       map = data.data.map;
       ticks = data.data.ticks;
       setLoading(false);
