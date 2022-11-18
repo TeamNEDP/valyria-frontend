@@ -7,17 +7,19 @@ import { useSearchParams } from "react-router-dom";
 import {draw} from "@/components/GameFunctions"
 
 
+let Data;
 let map;
 let ticks;
 const Gx = window.innerWidth / 10;
 const Gy = window.innerHeight / 10;
+let timer= undefined;
 
 
 const Judge = (props) => {
   let tick = props.tick;
 
   useEffect(() => {
-    if (tick == null) return;
+    if (tick == null || tick < 0) return;
     if (tick.changes === undefined || tick.changes === null) {
       return;
     }
@@ -141,10 +143,14 @@ const Battle = () => {
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const contestId = searchParams.get("id");
+
+  // 调用延时(setState)
+
   useEffect(() => {
     (async () => {
       let data = await get_games_details(contestId);
       console.log(data);
+      Data=data;
       map = data.data.map;
       ticks = data.data.ticks;
       setLoading(false);
