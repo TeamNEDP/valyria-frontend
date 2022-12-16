@@ -26,8 +26,6 @@ export function draw(i, j, size, type, soldiers, Stx, Sty) {
       return <PlainRed x={i} y={j} size={size} num={soldiers} Stx={Stx} Sty={Sty} />;
     case "LB":
       return <PlainBlue x={i} y={j} size={size} num={soldiers} Stx={Stx} Sty={Sty} />;
-    case "V":
-      return <PlainBlue x={i} y={j} size={size} Stx={Stx} Sty={Sty} />;
   }
 }
 
@@ -251,28 +249,6 @@ const PlainBlue = (param) => {
         fontSize={size / 2}
         fontFamily="serif"
         fill="white"
-      />
-    </>
-  );
-};
-
-const PlainVacanne = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const Gx = param.Stx;
-  const Gy = param.Sty;
-  const size = param.size;
-  const num = param.num;
-  return (
-    <>
-      <Rect
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-        fill="grey"
-        stroke="black"
-        strokeWidth={0.5}
       />
     </>
   );
