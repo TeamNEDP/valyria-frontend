@@ -32,7 +32,7 @@ function App() {
         <GlobalMessage />
         <HashRouter>
           <SiteAppBar />
-          <Container className="main-container" disableGutters>
+          <Container className="main-container" disableGutters sx={{marginLeft: 0, paddingLeft: 0}} maxWidth="100vh">
             <Routes>
               <Route path='/' element={<HomePage />} />
               <Route path='/battle' element={<Battle />} />

@@ -4,349 +4,107 @@ import useImage from "use-image";
 import { useEffect } from "react";
 import { get_games_details } from "../../api/battle_api";
 import { useSearchParams } from "react-router-dom";
-import { Input } from "@mui/material";
+import { Container } from "@mui/material";
+import "./index.css"
+import { draw } from "./Components/blocks"
 
-let map;
-let ticks;
-const Gx = window.innerWidth / 10;
-const Gy = window.innerHeight / 10;
+function Board(param) {
 
-function draw(i, j, size, type, soldiers) {
-  switch (type) {
-    case "M":
-      return <ShanImage x={i} y={j} size={size} />;
-    case "C":
-      return <ChenbaoImage x={i} y={j} size={size} num={soldiers} />;
-    case "R":
-      return <WangguanImage_red x={i} y={j} size={size} num={soldiers} />;
-    case "B":
-      return <WangguanImage_blue x={i} y={j} size={size} num={soldiers} />;
-    case "CR":
-      return <ChenbaoImage_red x={i} y={j} size={size} num={soldiers} />;
-    case "CB":
-      return <ChenbaoImage_blue x={i} y={j} size={size} num={soldiers} />;
-    case "LR":
-      return <Plaid_red x={i} y={j} size={size} num={soldiers} />;
-    case "LB":
-      return <Plaid_blue x={i} y={j} size={size} num={soldiers} />;
-  }
-}
+  var offset = {x: Math.floor(param.width / 2), y: Math.floor(param.height / 2)};
+  
+  var blockLength = param.width / param.map.width > param.height / param.map.height ?
+      Math.floor(param.height / param.map.height) : Math.floor(param.width / param.map.width);
+  if(blockLength > 100) blockLength = 100;
+  var backGround = {x: blockLength * param.map.width, y: blockLength * param.map.height};
+  var startPoint = {x: offset.x - Math.floor(backGround.x / 2), y: offset.y - Math.floor(backGround.y / 2)};
 
-const Judge = (props) => {
-  const tick = props.tick;
-  console.log(tick);
-
-  useEffect(() => {
-    if (tick >= ticks.length) return;
-    if (ticks[tick].changes === undefined || ticks[tick].changes === null) {
-      return;
-    }
-    for (const change of ticks[tick].changes) {
-      //更新地图指定格的状态
-      console.log(ticks[tick].changes.length);
-      map.grids[change.x * map.width + change.y].type = change.grid.type;
-      map.grids[change.x * map.width + change.y].soldiers =
-        change.grid.soldiers;
-    }
-  }, [props.tick]);
-
-  return <></>;
-};
-
-const ShanImage = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const [image] = useImage("http://www.yvmu.top/img/neutrality/mountain.png");
-  return (
-    <>
-      <Image
-        image={image}
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-      />
-    </>
-  );
-};
-
-const WangguanImage_red = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const num = param.num;
-  const [image] = useImage("http://www.yvmu.top/img/red/Crown.png");
-  return (
-    <>
-      <Image
-        image={image}
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-      />
-      <Text
-        x={Gx + xx * size + size / 4}
-        y={Gy + yy * size + size / 4}
-        text={num}
-        fontSize={size / 2}
-        fontFamily="serif"
-        fill="white"
-      />
-    </>
-  );
-};
-
-const WangguanImage_blue = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const num = param.num;
-  const [image] = useImage("http://www.yvmu.top/img/blue/crown.png");
-  return (
-    <>
-      <Image
-        image={image}
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-      />
-      <Text
-        x={Gx + xx * size + size / 4}
-        y={Gy + yy * size + size / 4}
-        text={num}
-        fontSize={size / 2}
-        fontFamily="serif"
-        fill="white"
-      />
-    </>
-  );
-};
-
-const ChenbaoImage_red = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const num = param.num;
-  const [image] = useImage("http://www.yvmu.top/img/red/castle.png");
-  return (
-    <>
-      <Image
-        image={image}
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-      />
-      <Text
-        x={Gx + xx * size + size / 4}
-        y={Gy + yy * size + size / 4}
-        text={num}
-        fontSize={size / 2}
-        fontFamily="serif"
-        fill="white"
-      />
-    </>
-  );
-};
-
-const ChenbaoImage_blue = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const num = param.num;
-  const [image] = useImage("http://www.yvmu.top/img/blue/castle.png");
-  return (
-    <>
-      <Image
-        image={image}
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-      />
-      <Text
-        x={Gx + xx * size + size / 4}
-        y={Gy + yy * size + size / 4}
-        text={num}
-        fontSize={size / 2}
-        fontFamily="serif"
-        fill="white"
-      />
-    </>
-  );
-};
-
-const ChenbaoImage = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const num = param.num;
-  const [image] = useImage("http://www.yvmu.top/img/neutrality/Castle.png");
-  return (
-    <>
-      <Image
-        image={image}
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-      />
-      <Text
-        x={Gx + xx * size + size / 4}
-        y={Gy + yy * size + size / 4}
-        text={num}
-        fontSize={size / 2}
-        fontFamily="serif"
-        fill="white"
-      />
-    </>
-  );
-};
-
-const Plaid_red = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const num = param.num;
-  return (
-    <>
-      <Rect
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-        fill="red"
-        stroke="black"
-        strokeWidth={0.5}
-      />
-      <Text
-        x={Gx + xx * size + size / 4}
-        y={Gy + yy * size + size / 4}
-        text={num}
-        fontSize={size / 2}
-        fontFamily="serif"
-        fill="white"
-      />
-    </>
-  );
-};
-
-const Plaid_blue = (param) => {
-  const xx = param.x;
-  const yy = param.y;
-  const size = param.size;
-  const num = param.num;
-  return (
-    <>
-      <Rect
-        x={Gx + xx * size}
-        y={Gy + yy * size}
-        width={size}
-        height={size}
-        fill="blue"
-        stroke="black"
-        strokeWidth={0.5}
-      />
-      <Text
-        x={Gx + xx * size + size / 4}
-        y={Gy + yy * size + size / 4}
-        text={num}
-        fontSize={size / 2}
-        fontFamily="serif"
-        fill="white"
-      />
-    </>
-  );
-};
-
-class Board extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      size: 50,
-      width: map.width * 50,
-      height: map.height * 50,
-      str: [],
-    };
-  }
-
-  renderdraw() {
+  const drawit = (map) => {
+    var res = [];
     for (let i = 0; i < map.width; i++) {
       for (let j = 0; j < map.height; j++) {
-        this.state.str.push(
+        res.push(
           draw(
             i,
             j,
-            this.state.size,
+            blockLength,
             map.grids[i * map.width + j].type,
-            map.grids[i * map.width + j].soldiers
+            map.grids[i * map.width + j].soldiers,
+            startPoint.x,
+            startPoint.y,
           )
         );
       }
     }
-    return this.state.str;
-  }
+    console.log(res);
+    return res;
+  };
 
-  render() {
-    return (
-      <>
-        <Rect
-          x={Gx}
-          y={Gy}
-          width={this.state.width}
-          height={this.state.height}
-          fill="grey"
-          stroke="grey"
-          strokeWidth={2}
-          shadowBlur={10}
-        />
-        <Group>{this.renderdraw()}</Group>
-      </>
-    );
-  }
+  console.log(blockLength);
+  console.log(backGround.y);
+
+  return <>
+    <Rect
+      x={startPoint.x}
+      y={startPoint.y}
+      width={backGround.x}
+      height={backGround.y}
+      fill="grey"
+      stroke="grey"
+      strokeWidth={0}
+      shadowBlur={0}
+    />
+    <Group>
+      {drawit(param.map)}
+    </Group>
+    
+  </>
 }
 
-class Game extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <>
-        <Judge tick={this.props.tick} />
-      </>
-    );
-  }
+function Game() {
+  return <></>;
 }
 
-const App = () => {
+const App = (param) => {
   const [tick, setTick] = useState(0);
   const [auto, setAuto] = useState(false);
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
   useEffect(() => {
-    if (tick + 1 >= ticks.length) {
+    if(tick + 1 >= param.ticks.length) {
       setAuto(false);
     }
   }, [tick, setAuto]);
 
   useEffect(() => {
-    if (auto && tick + 1 < ticks.length) {
+    if(auto && tick + 1 < param.ticks.length) {
       setTimeout(() => {
         setTick(tick + 1);
       }, 100);
     }
   }, [tick, setTick, auto]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <>
       <div>
         <button
           onClick={() => {
-            if (tick + 1 < ticks.length) setTick(tick + 1);
+            if (tick + 1 < param.ticks.length) setTick(tick + 1);
           }}
         >
           第 {tick} 步
@@ -359,40 +117,40 @@ const App = () => {
           {auto ? "关闭自动播放" : "开启自动播放"}
         </button>
       </div>
-      <Stage width={1238} height={450}>
+      
+      <Stage width={windowSize.width} height={windowSize.height - 64 - 24 * 2}>
         <Layer>
-          <Board />
+          <Board map={param.map} width={windowSize.width} height={windowSize.height - 64 - 24 * 2}/>
           <Game tick={tick} />
         </Layer>
       </Stage>
-
-      {/* {tick < ticks.length && <>
-        <p>Next tick:</p>
-        <p>Operator: {ticks[tick].operator}</p>
-        <p>Action error: {ticks[tick].action_error}</p>
-        <Input multiline fullWidth disabled value={JSON.stringify(ticks[tick].action, null, 2)}/>
-        <p>Changes: </p>
-        <Input multiline fullWidth disabled value={JSON.stringify(ticks[tick].changes, null, 2)}/>
-      </>} */}
     </>
   );
 };
 
 const Battle = () => {
   const [loading, setLoading] = useState(true);
+  const [data, setData] = useState({});
   const [searchParams] = useSearchParams();
   const contestId = searchParams.get("id");
   useEffect(() => {
-    (async () => {
-      let data = await get_games_details(contestId);
-      console.log(data);
-      map = data.data.map;
-      ticks = data.data.ticks;
-      setLoading(false);
-    })();
+    (async (cb) => {
+      if(loading) {
+        const ret = await get_games_details(contestId);
+        cb(ret.data);
+        setData(ret.data);
+        setLoading(false);
+      }
+    })(setData);
   }, [contestId, get_games_details, setLoading]);
-
-  return <>{loading ? <p>加载中</p> : <App />}</>;
+  
+  // return <>{loading ? <p>加载中</p> : <App map={data.map} ticks={data.ticks} />}</>;
+  
+  if(loading) {
+    return <p>加载中</p>;
+  }else {
+    return <App map={data.map} ticks={data.ticks} />;
+  }
 };
 
 export default Battle;

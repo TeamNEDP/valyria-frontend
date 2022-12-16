@@ -16,7 +16,7 @@ function AppBarButton(param) {
   return (
     <Button color="inherit" component={Link} to={param.to} size="large" onClick={param.onClick}
       sx={{
-        display: { xs: 'none', md: 'flex' },
+        display: { xs: param.displayInXS ? 'flex' : 'none', md: 'flex' },
         fontFamily: 'Sans-serif',
         fontWeight: 500,
         color: 'inherit',
@@ -48,7 +48,7 @@ function SiteAppBar() {
   };
 
   return (
-    <AppBar position="sticky" sx={{ zIndex: "10" }}>
+    <AppBar position="sticky" sx={{ height: 64 }}>
       <Toolbar>
         <Typography
           variant="h6"
@@ -68,15 +68,15 @@ function SiteAppBar() {
           Valyria
         </Typography>
         <></>
-        <AppBarButton content="主页" to="/" />
-        <AppBarButton content="赛事大厅" to="/contest" />
-        <AppBarButton content="排行榜" to="/rank" />
-        <AppBarButton content="排位赛" to="/qualifying" />
+        <AppBarButton content="主页" to="/" displayInXS={true} />
+        <AppBarButton content="赛事大厅" to="/contest" displayInXS={true} />
+        <AppBarButton content="排行榜" to="/rank" displayInXS={true} />
+        <AppBarButton content="排位赛" to="/qualifying" displayInXS={true} />
         <AppBarButton content="战斗页面（开发者入口）" to="/battle" />
         {loading ? <></> : (userInfo === null ?
-          <AppBarButton content="登录 / 注册" rightSide to="/login" />
+          <AppBarButton content="登录 / 注册" rightSide to="/login" displayInXS={true} />
           :
-          <AppBarButton content={userInfo.data.name} rightSide onClick={handleClick} />
+          <AppBarButton content={userInfo.data.name} rightSide onClick={handleClick} displayInXS={true}/>
         )}
       </Toolbar>
       <Menu
