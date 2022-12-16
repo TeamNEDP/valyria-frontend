@@ -35,12 +35,8 @@ function Board(param) {
         );
       }
     }
-    console.log(res);
     return res;
   };
-
-  console.log(blockLength);
-  console.log(backGround.y);
 
   return <>
     <Rect
@@ -60,9 +56,20 @@ function Board(param) {
   </>
 }
 
-function Game() {
+const Game = (param) => {
+  useEffect(() => {
+    if (param.tick.changes === undefined || param.tick.changes === null) {
+      return;
+    }
+    for (const change of param.tick.changes) {
+      param.map.grids[change.x * param.map.width + change.y].type = change.grid.type;
+      param.map.grids[change.x * param.map.width + change.y].soldiers = change.grid.soldiers;
+    }
+  }, [param.tick]);
+
   return <></>;
 }
+
 
 const App = (param) => {
   const [tick, setTick] = useState(0);
@@ -121,7 +128,7 @@ const App = (param) => {
       <Stage width={windowSize.width} height={windowSize.height - 64 - 24 * 2}>
         <Layer>
           <Board map={param.map} width={windowSize.width} height={windowSize.height - 64 - 24 * 2}/>
-          <Game tick={tick} />
+          <Game map={param.map} tick={param.ticks[tick]} />
         </Layer>
       </Stage>
     </>
