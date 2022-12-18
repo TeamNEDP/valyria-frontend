@@ -35,6 +35,7 @@ function Board(param) {
         );
       }
     }
+    console.log("done");
     return res;
   };
 
@@ -116,7 +117,7 @@ const App = (param) => {
       <div>
         <button
           onClick={() => {
-            if (tick + 1 < param.ticks.length) setTick(tick + 1);
+            if (tick < param.ticks.length) setTick(tick);
           }}
         >
           第 {tick} 步
@@ -134,6 +135,7 @@ const App = (param) => {
         <Layer>
           <Board map={param.map} width={windowSize.width} height={windowSize.height - 64 - 24 * 2}/>
           { (() => {
+            console.log(tick);
             if(param.ticks.length >= 1) return <Game map={param.map} tick={param.ticks[tick]} />;
             else return <></>;
           })() }
@@ -169,11 +171,18 @@ const Battle = () => {
               data.map = obj.data.map;
               data.ticks = [];
               // console.log("set loading false");
+              for(const e of obj.data.ticks) {
+                for(const change of e.changes) {
+                  data.map.grids[change.x * data.map.height + change.y].type = change.grid.type;
+                  data.map.grids[change.x * data.map.height + change.y].soldiers = change.grid.soldiers;
+                }
+              }
               setLoading(false);
             }else if(obj.event === "update") {
               data.ticks.push(obj.data);
             }else if(obj.event === "end") {
               // console.log("live ended");
+              data.ticks.push({changes: []});
             }
           };
           
@@ -184,7 +193,8 @@ const Battle = () => {
         }else {
           const ret = await get_games_details(contestId);
           cb(ret.data);
-          // console.log(ret.data);
+          ret.data.ticks.push({changes: []})
+          console.log(ret.data);
           setData(ret.data);
           setLoading(false);
         }
