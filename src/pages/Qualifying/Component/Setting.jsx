@@ -11,11 +11,12 @@ import { get_competition, post_competition } from "@/api/battle_api";
 import { useEffect } from 'react';
 import useMessage from "@/hooks/useMessage";
 import { useCallback } from 'react';
+import { Container } from '@mui/system';
 export default function Setting() {
     const scripts = useRecoilValue(ScriptsState);
     const [, { addMessage }] = useMessage();
     const [involved, setInvolved] = useState(false);
-    const [scriptName, setScriptName] = useState('');
+    const [, setScriptName] = useState('');
     const [name, setName] = useState('');
     useEffect(() => {
         (async () => {
@@ -24,38 +25,31 @@ export default function Setting() {
                     get_competition(),
                 ]);
 
-                setInvolved(CompetitionStatus.data.involved), setScriptName(CompetitionStatus.data.scriptName);
+                setInvolved(CompetitionStatus.data.involved);
+                setScriptName(CompetitionStatus.data.scriptName);
+                if(name === '') setName(CompetitionStatus.data.scriptName);
             } catch (e) {
             } finally {
             }
         })();
     });
-    const handClick1 = useCallback(
-        async () => {
+    const handClick = () => {
+        (async () => {
             try {
-                console.log(name)
-                await post_competition(null);
-                addMessage("success", "修改成功")
-            } catch (e) {
-                console.log(e)
-                addMessage("error", "修改失败");
-            } finally {
-            }
-        }, [name]
-    );
-    const handClick2 = useCallback(
-        async () => {
-            try {
-
-                involved ? setName('') : setName(name);
-                await post_competition(name);
+                if(involved) {
+                    await post_competition(null);
+                }else {
+                    console.log(name);
+                    await post_competition(name);
+                }
+                
                 addMessage("success", "成功")
             } catch (e) {
                 addMessage("error", "失败");
             } finally {
             }
-        }, [name]
-    );
+        })();
+    }
     return (
         <React.Fragment>
             <Title>{involved ? '已参与排位' : '未参与排位'}</Title>
@@ -64,10 +58,11 @@ export default function Setting() {
                 <Grid item md={9}>
                     <Select
                         displayEmpty
+                        disabled={involved}
                         id="Bscript"
                         value={name}
                         sx={{ m: 1, minWidth: 250 }}
-                        onChange={(e) => { setName(e.target.value) }}
+                        onChange={(e) => { setName(e.target.value); }}
                     >{scripts.map((script) => (
                         <MenuItem key={script.name} value={script.name}>
                             {script.name}
@@ -76,8 +71,10 @@ export default function Setting() {
                     </Select>
                 </Grid>
             </Grid >
-            {involved ? <Button onClick={handClick1}>修改脚本</Button> : <></>}
-            <Button onClick={handClick2}>{involved ? '退出排位' : '参与排位'}</Button>
+            <Grid><br/></Grid>
+            <Container maxWidth="sm" align = "center" justify = "center">
+                <Button onClick={handClick}>{involved ? '退出排位' : '参与排位'}</Button>
+            </Container>
 
 
         </React.Fragment >

@@ -11,13 +11,14 @@ import Rating from './Component/Rating';
 import Gamelist from './Component/Gamelist';
 import DefaultState from './Component/DefaultState';
 import Rightbar from './Component/Rightbar'
+
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" href="https://docs.se.s8k.top/">
-                Your Website
-            </Link>{' '}
+
+            Your Website.
+
             {new Date().getFullYear()}
             {'.'}
         </Typography>
@@ -28,6 +29,8 @@ const mdTheme = createTheme();
 const UserProfile = () => {
     return (
         <Grid container spacing={1} rowSpacing={3}>
+            <Grid item xs={12}></Grid>
+
             <DefaultState />
             <Grid item md={9} >
 

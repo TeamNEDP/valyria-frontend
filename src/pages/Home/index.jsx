@@ -13,15 +13,10 @@ import Main from './Component/Main';
 import Sidebar from './Component/Sidebar';
 import Footer from './Component/Footer';
 // import post from './Component/post.md'
+import { Toolbar, } from "@mui/material";
 
-const mainFeaturedPost = {
-  title: 'Valyria',
-  description:
-    "Valyria 是基于 generals.io 游戏规则的在线 AI 对战平台，玩家需要通过脚本语言编写自己的 AI 程序，与其他玩家的 AI 程序进行对战。",
-  image: 'src/logo/logo.svg',//图片还没想好放啥
-  imageText: 'main image description',
-  linkText: '获取更多信息',
-};
+import edit from './Component/edit.svg'
+import pk from './Component/pk.svg'
 
 const featuredPosts = [
   {
@@ -29,63 +24,60 @@ const featuredPosts = [
     detail: 'Script',
     description:
       '参考样例脚本，编写出属于你自己的最强脚本！',
-    image: 'src/pages/Home/Component/edit.svg',
+    image: edit,
     imageLabel: 'Image Text',
-    text: '点击开始编写'
+    text: 'https://joky02.github.io'
   },
   {
     title: '开启排位赛',
     detail: 'Qualifying',
     description:
       "对战不同玩家，证明自己的实力！",
-    image: 'src/pages/Home/Component/pk.svg',
+    image: pk,
     imageLabel: 'Image Text',
-    text: '点击开始排位'
+    text: '#/qualifying'
   },
 ];
 
 
 const sidebar = {
-  title: '软工大作业好难受',
+  title: 'About',
   description:
-    '啊确实',
-  archives: [
-    { title: '11.20 排位赛开启通知', url: '#' },
-    { title: '11.19 游戏维护通知', url: '#' },
+    '这是一个大作业 by TeamNEDP',
 
-
-  ],
   social: [
-    { name: 'GitHub', icon: GitHubIcon },
-    { name: 'Twitter', icon: TwitterIcon },
-    { name: 'Facebook', icon: FacebookIcon },
+    { name: 'GitHub', icon: GitHubIcon, url: 'https://github.com/TeamNEDP?tab=repositories' },
+    { name: 'Twitter', icon: TwitterIcon, url: '#' },
+    { name: 'Facebook', icon: FacebookIcon, url: '#' },
   ],
 };
+const main = {
+  archives: [
+    { title: '现已支持排位赛功能。', url: '#' },
 
+  ],
+}
 const theme = createTheme();
 
 export default function HomePage() {
-
-  const posts = ['1123'];
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
       <Container maxWidth="lg">
         <main>
-          <MainFeaturedPost post={mainFeaturedPost} />
+          <MainFeaturedPost />
           <Grid container spacing={4}>
             {featuredPosts.map((post) => (
               <FeaturedPost key={post.title} post={post} />
             ))}
           </Grid>
           <Grid container spacing={5} sx={{ mt: 3 }}>
-            <Main title="游戏介绍" posts={posts} />
+            <Main title="公告" archives={main.archives} />
             <Sidebar
               title={sidebar.title}
               description={sidebar.description}
-              archives={sidebar.archives}
               social={sidebar.social}
             />
+
           </Grid>
         </main>
       </Container>

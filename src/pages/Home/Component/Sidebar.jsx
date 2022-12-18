@@ -7,24 +7,18 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 
 function Sidebar(props) {
-    const { archives, description, social, title } = props;
+    const { description, social, title } = props;
 
     return (
         <Grid item xs={12} md={4}>
             <Paper elevation={0} sx={{ p: 2, bgcolor: 'grey.200' }}>
-                <Typography variant="h6" gutterBottom>
-                    {title}
+                <Typography variant="h5" gutterBottom>
+                    <strong>{title}</strong>
                 </Typography>
-                <Typography>{description}</Typography>
+                <Typography>
+                    这是一个大作业 by <i><strong>TeamNEDP</strong></i>
+                </Typography>
             </Paper>
-            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-                公告
-            </Typography>
-            {archives.map((archive) => (
-                <Link display="block" variant="body1" href={archive.url} key={archive.title}>
-                    {archive.title}
-                </Link>
-            ))}
 
             <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
                 社区
@@ -33,7 +27,7 @@ function Sidebar(props) {
                 <Link
                     display="block"
                     variant="body1"
-                    href="#"
+                    href={network.url}
                     key={network.name}
                     sx={{ mb: 0.5 }}
                 >
@@ -47,21 +41,6 @@ function Sidebar(props) {
     );
 }
 
-Sidebar.propTypes = {
-    archives: PropTypes.arrayOf(
-        PropTypes.shape({
-            title: PropTypes.string.isRequired,
-            url: PropTypes.string.isRequired,
-        }),
-    ).isRequired,
-    description: PropTypes.string.isRequired,
-    social: PropTypes.arrayOf(
-        PropTypes.shape({
-            icon: PropTypes.elementType.isRequired,
-            name: PropTypes.string.isRequired,
-        }),
-    ).isRequired,
-    title: PropTypes.string.isRequired,
-};
+
 
 export default Sidebar;

@@ -7,13 +7,13 @@ function createData(time, amount) {
     return { time, amount };
 }
 const data = [
-    createData('11.07', 1),
-    createData('11.08', 2),
-    createData('11.09', 3),
-    createData('11.10', 4),
-    createData('11.11', 5),
-    createData('11.12', 6),
-    createData('11.13', 7),
+    createData('12.10', 28),
+    createData('12.11', 25),
+    createData('12.12', 18),
+    createData('12.13', 36),
+    createData('12.14', 27),
+    createData('12.15', 35),
+    createData('12.16', 25),
     createData('today', undefined),
 ];
 

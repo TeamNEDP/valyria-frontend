@@ -108,8 +108,8 @@ function UserScripts() {
                   setName(m.name);
                   setCode(m.code);
                 }}>
-                  <ListItemIcon onClick={() => setDialogOpen(true)} >
-                    <DeleteIcon />
+                  <ListItemIcon >
+                    <DeleteIcon onClick={() => setDialogOpen(true)} />
                   </ListItemIcon>
 
                   <ListItemText

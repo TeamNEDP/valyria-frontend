@@ -7,6 +7,9 @@ import EmailIcon from '@mui/icons-material/Email';
 import PersonIcon from '@mui/icons-material/Person';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import first from '../trophy/first.svg'
+import second from '../trophy/second.svg'
+import third from '../trophy/third.svg'
 const RankList = () => {
     const ranklists = useRecoilValue(RankListsState);
     return (
@@ -36,7 +39,8 @@ const RankList = () => {
                                     </span>
                                 }
                             />
-                            <Avatar alt={player.id} src={"../src/Pages/Rank/Component/trophy/" + (index == 0 ? "first" : index == 1 ? "second" : "third") + ".svg"}
+                            {/* "../src/Pages/Rank/Component/trophy/" + (index == 0 ? "first" : index == 1 ? "second" : "third") + ".svg" */}
+                            <Avatar alt={player.id} src={(index == 0 ? first : index == 1 ? second : third)}
                                 sx={{
                                     width: 120,
                                     height: 120,

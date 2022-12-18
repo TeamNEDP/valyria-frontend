@@ -49,26 +49,50 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { fontFamily, letterSpacing } from "@mui/system";
+import blueicon from '@/pages/Contest/blue.svg'
+import redicon from '@/pages/Contest/red.svg'
+import greyicon from '@/pages/Contest/grey.svg'
 
 function Row(props) {
   //列表子项
   const { row } = props;
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   return (
     <React.Fragment >
-      <TableRow >
+      <TableRow sx={{
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        opacity: 0.9,
+        backgroundImage:
+          row.result == null ? `url(${greyicon})` :
+            row.official ?
+              row.result.winner == row.role ? `url(${blueicon})` :
+                row.result.winner == 'D' ? `url(${greyicon})` : `url(${redicon})` :
+              row.result.winner == 'B' ? `url(${blueicon})` : row.result.winner == 'R' ?
+                `url(${redicon})` : `url(${greyicon})`
+      }}>
         <TableCell >
-
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
         </TableCell>
         <TableCell component="th" scope="row" align="justify">
-          <Chip icon={<AccessTimeIcon />} label={moment(row.date * 1000).format("YYYY-MM-DD HH:mm:ss")} />{" "}
+          <Chip icon={<AccessTimeIcon />} sx={{ 'fontWeight': 'bolder', 'backgroundColor': 'white' }} variant="outlined" label={moment(row.date * 1000).format("YYYY-MM-DD HH:mm:ss")} />{""}
         </TableCell>
 
         <TableCell >
-          {row.result == null ? <></> : row.result.winner == 'R' ?
-            <h1 style={{ color: "blue", fontFamily: '楷体', letterSpacing: 15 }} >胜利</h1>
-            : <h1 style={{ color: "red ", fontFamily: '楷体', letterSpacing: 15 }} >失败</h1>}
+          {row.result == null ? <></> : row.official ?
+            row.result.winner == row.role ? <i><h1 >Victory</h1></i> :
+              row.result.winner == 'D' ? <i><h1 >Draw</h1></i> : <i><h1>Defeat</h1></i> :
+            row.result.winner == 'B' ? <i><h1 >Blue Wins</h1></i> : row.result.winner == 'R' ?
+              <i><h1>Red Wins</h1></i> : <i><h1 >Draw</h1></i>
+
+          }
 
         </TableCell>
         <TableCell align="center">
@@ -92,18 +116,16 @@ function Row(props) {
         </TableCell>
         <TableCell align="center">
           {/* {row.official ? <CheckIcon /> : <ClearIcon />} */}
-          {row.offical ?
+          {row.official ?
             <h3>排位赛</h3>
-            : <h3>常规赛</h3>}
+            : <h3>自定义比赛</h3>}
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5} sx={{ borderBottom: 1 }}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5} >
           <Collapse in={open} timeout="auto" unmountOnExit >
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                游戏详情:
-              </Typography>
+
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
@@ -156,7 +178,8 @@ function Row(props) {
                       variant="contained"
                       endIcon={<SendIcon />}
                       onClick={() => {
-                        navigate("/battle?id=" + row.id);
+
+                        navigate("/battle?id=" + row.id + '&r_user_id=' + row.r_user_id + '&b_user_id=' + row.b_user_id);
                       }}
                     >
                       复盘
@@ -165,7 +188,8 @@ function Row(props) {
                       variant="contained"
                       endIcon={<SendIcon />}
                       onClick={() => {
-                        navigate("/");
+
+                        navigate("/battle?id=" + row.id + "&live=true");
                       }}
                     >
                       直播
@@ -223,24 +247,32 @@ export default function GameList() {
   const handleChangePageLeft = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
+      setPage(currentPage - 1);
       window.scrollTo(0, 0)
     }
   };
   const handleChangePageRight = () => {
     if (gamelists?.length == rowsPerPage) {
       setCurrentPage(currentPage + 1);
+      setPage(currentPage + 1)
       window.scrollTo(0, 0)
     }
   };
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value));
+    setRowsPerPage(row1);
     setCurrentPage(1);
+    setPage(1)
   };
   const handleChangePage = (event) => {
-    setCurrentPage(parseInt(event.target.value));
+
+
+    setCurrentPage(page)
     setRowsPerPage(rowsPerPage);
+
   };
   const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [row1, setRow] = useState(20);
   return (
     <Grid container>
 
@@ -248,17 +280,17 @@ export default function GameList() {
         <Table  >
           <TableHead >
             <TableRow >
-              <TableCell sx={{ borderBottom: 1 }} />
-              <TableCell align="justify" sx={{ borderBottom: 1 }} >
+              <TableCell />
+              <TableCell align="justify" >
                 <h2><strong >游戏时间</strong></h2>
               </TableCell>
-              <TableCell sx={{ borderBottom: 1 }}>
+              <TableCell >
                 <h2><strong>游戏结果</strong></h2>
               </TableCell>
-              <TableCell align="center" sx={{ borderBottom: 1 }}>
+              <TableCell align="center" >
                 <h2><strong>游戏状态</strong></h2>
               </TableCell>
-              <TableCell align="center" sx={{ borderBottom: 1 }}>
+              <TableCell align="center" >
                 <h2><strong>比赛类型</strong></h2>
               </TableCell>
             </TableRow>
@@ -273,14 +305,24 @@ export default function GameList() {
               <TableCell colSpan={1}> </TableCell>
               <TableCell colSpan={2}>
                 <Typography variant="h5" component="h5">
-                  每页数量:
+                  每页行数:
                   <TextField
                     hiddenLabel
                     id="filled-hidden-label-small"
-                    value={rowsPerPage}
+                    value={row1}
                     sx={{ width: "5ch" }}
                     size="small"
-                    onChange={handleChangeRowsPerPage}
+                    onChange={(e) => { setRow(e.target.value) }}
+                    onKeyPress={(event) => {
+                      if (event.key === 'Enter') {
+                        if (row1 === '') {
+                          addMessage("error", "每页行数不能为空！ ");
+
+                        }
+                        handleChangeRowsPerPage()
+                      }
+
+                    }}
                   />
                 </Typography>
               </TableCell>
@@ -292,8 +334,18 @@ export default function GameList() {
                     id="filled-hidden-label-small"
                     sx={{ width: "5ch" }}
                     size="small"
-                    value={currentPage}
-                    onChange={handleChangePage}
+                    value={page}
+                    onChange={(e) => { setPage(e.target.value) }}
+                    onKeyPress={(event) => {
+                      if (event.key === 'Enter') {
+                        if (page === '') {
+                          addMessage("error", "页数不能为空！ ");
+                        }
+                        handleChangePage()
+                      }
+
+                    }}
+
                   />
                 </Typography>
               </TableCell>
@@ -376,5 +428,6 @@ export default function GameList() {
         </DialogActions>
       </Dialog>
     </Grid >
+
   );
 }
