@@ -43,6 +43,7 @@ function Board(param) {
         );
       }
     }
+    console.log("done");
     return res;
   };
 
@@ -241,16 +242,17 @@ const Battle = () => {
       if (loading) {
         if (isLive === "true") {
           const socket = new WebSocket("ws://101.43.76.104:8000/api/games/" + contestId + "/live");
-          socket.onopen = function (msg) { };
+
+          socket.onopen = function (msg) {
+
+          };
+
           socket.onmessage = function (msg) {
-
+            // console.log(msg);
             const obj = JSON.parse(msg.data);
-
             if (obj.event === "intro") {
-
               data.map = obj.data.map;
               data.ticks = [];
-
               for (const e of obj.data.ticks) {
                 for (const change of e.changes) {
                   data.map.grids[change.x * data.map.height + change.y].type = change.grid.type;
