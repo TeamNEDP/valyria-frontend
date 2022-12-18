@@ -7,16 +7,24 @@ import { useSearchParams } from "react-router-dom";
 import { Container } from "@mui/material";
 import "./index.css"
 import { draw } from "./Components/blocks"
+import logo from '@/logo/logo.svg';
+import Paper from '@mui/material/Paper';
 
+import { Button, ButtonGroup } from '@mui/material';
+import Rightbar from './Component/Rightbar';
+import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
+import Grid from '@mui/material/Grid';
+import Slider from '@mui/material/Slider';
+import { Input } from "@mui/material";
 function Board(param) {
 
-  var offset = {x: Math.floor(param.width / 2), y: Math.floor(param.height / 2)};
-  
+  var offset = { x: Math.floor(param.width / 3.5), y: Math.floor(param.height / 2) };
+
   var blockLength = param.width / param.map.width > param.height / param.map.height ?
-      Math.floor(param.height / param.map.height) : Math.floor(param.width / param.map.width);
-  if(blockLength > 100) blockLength = 100;
-  var backGround = {x: blockLength * param.map.width, y: blockLength * param.map.height};
-  var startPoint = {x: offset.x - Math.floor(backGround.x / 2), y: offset.y - Math.floor(backGround.y / 2)};
+    Math.floor(param.height / param.map.height) : Math.floor(param.width / param.map.width);
+  if (blockLength > 100) blockLength = 100;
+  var backGround = { x: blockLength * param.map.width, y: blockLength * param.map.height };
+  var startPoint = { x: offset.x - Math.floor(backGround.x / 2), y: offset.y - Math.floor(backGround.y / 2) };
 
   const drawit = (map) => {
     var res = [];
@@ -53,7 +61,7 @@ function Board(param) {
     <Group>
       {drawit(param.map)}
     </Group>
-    
+
   </>
 }
 
@@ -79,23 +87,42 @@ const App = (param) => {
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  const [speed, setSpeed] = useState(1);
   const live = param.live;
-
+  const r_user_id = param.r_user_id;
+  const b_user_id = param.b_user_id;
+  const handleSliderChange = (event, newValue) => {
+    setTick(newValue);
+  };
+  const handleInputChange = (event) => {
+    setTick(event.target.value === '' ? '' : Number(event.target.value));
+  };
   useEffect(() => {
-    if(live && tick + 1 >= param.ticks.length) {
+    if (live && tick + 1 >= param.ticks.length) {
+      setAuto(false);
+    }
+    if (!live && tick + 1 >= param.ticks.length) {
       setAuto(false);
     }
   }, [tick, setAuto]);
 
+  const handleBlur = () => {
+    if (tick < 1) {
+      setTick(1);
+    } else if (tick + 1 >= param.ticks.length) {
+      setTick(param.ticks.length);
+    }
+  };
+
   useEffect(() => {
-    if(auto && tick + 1 < param.ticks.length) {
+    if (auto && tick + 1 < param.ticks.length) {
       setTimeout(() => {
         setTick(tick + 1);
-      }, 100);
-    }else if(auto && live) {
+      }, 100 / speed);
+    } else if (auto && live) {
       setTimeout(() => {
         setTick(tick);
-      }, 100);
+      }, 100 / speed);
     }
   }, [tick, setTick, auto]);
 
@@ -114,33 +141,89 @@ const App = (param) => {
 
   return (
     <>
-      <div>
-        <button
-          onClick={() => {
-            if (tick < param.ticks.length) setTick(tick);
-          }}
-        >
-          第 {tick} 步
-        </button>
-        <button
-          onClick={() => {
-            setAuto(!auto);
-          }}
-        >
-          {auto ? "关闭自动播放" : "开启自动播放"}
-        </button>
-      </div>
-      
-      <Stage width={windowSize.width} height={windowSize.height - 64 - 24 * 2}>
-        <Layer>
-          <Board map={param.map} width={windowSize.width} height={windowSize.height - 64 - 24 * 2}/>
-          { (() => {
-            console.log(tick);
-            if(param.ticks.length >= 1) return <Game map={param.map} tick={param.ticks[tick]} />;
-            else return <></>;
-          })() }
-        </Layer>
-      </Stage>
+
+      <Grid container >
+
+        <Rightbar id={r_user_id} role={'R'}></Rightbar>
+
+
+
+        <Grid container item md={7} xs={12} sm={12} justifyContent='center'>
+          <Grid item md={12} xs={12} sx={{
+            position: 'relative',
+            mb: 4,
+            backgroundSize: 'cover',
+            opacity: 0.8,
+            backgroundPosition: 'center',
+            backgroundImage: `url(${logo})`,
+          }}>
+
+            <Stage width={windowSize.width / 12 * 7} height={windowSize.height - 128 - 24 * 2}>
+
+              <Layer >
+                <Board map={param.map} width={windowSize.width} height={windowSize.height - 128 - 24 * 2} />
+                {(() => {
+                  if (param.ticks.length >= 1) return <Game map={param.map} tick={param.ticks[tick]} />;
+                  else return <></>;
+                })()}
+              </Layer>
+
+            </Stage>
+
+
+          </Grid>
+
+          <Grid item md={12} xs={12} elevation={2} >
+            <Grid container spacing={2}  >
+              <Grid item md={1} xs={1}>
+                <LabelOutlinedIcon color="primary" />
+              </Grid>
+              <Grid item md={9} xs={9}>
+                <Slider
+                  value={typeof tick === 'number' ? tick : 0}
+                  step={1}
+                  min={1}
+                  max={param.ticks.length - 1}
+                  onChange={handleSliderChange}
+                // aria-label="Small"
+                />
+              </Grid>
+              <Grid item md={2} xs={2}>
+                <Input
+                  value={tick}
+                  size="small"
+                  onChange={handleInputChange}
+                  onBlur={handleBlur}
+                  inputProps={{
+                    step: 10,
+                    min: 0,
+                    max: 1000,
+                    type: 'number',
+                    'aria-labelledby': 'input-slider',
+                  }}
+                />
+              </Grid>
+
+            </Grid>
+            <Grid container justifyContent="center" >
+              <Grid item>
+                <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                  <Button onClick={() => { setSpeed(1), console.log(speed) }}>X1</Button>
+                  <Button onClick={() => setSpeed(5)}>X5</Button>
+                  <Button onClick={() => { setSpeed(10), console.log(speed) }}>X10</Button>
+                  <Button variant="contained" onClick={() => { setAuto(!auto); }}
+                  >{auto ? "停止播放" : "开启播放"}</Button>
+                </ButtonGroup>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Rightbar id={b_user_id} role={'B'}></Rightbar>
+
+      </Grid>
+
+
     </>
   );
 };
@@ -150,46 +233,51 @@ const Battle = () => {
   const [data, setData] = useState({});
   const [searchParams] = useSearchParams();
   const contestId = searchParams.get("id");
+  const r_user_id = searchParams.get("r_user_id");
+  const b_user_id = searchParams.get("b_user_id");
   const isLive = searchParams.get("live");
   const [isLiveEnded, setLiveEnded] = useState(false);
   useEffect(() => {
     (async (cb) => {
-      if(loading) {
-        if(isLive === "true") {
+      if (loading) {
+        if (isLive === "true") {
           const socket = new WebSocket("ws://101.43.76.104:8000/api/games/" + contestId + "/live");
-          
-          socket.onopen = function(msg) {};
 
-          socket.onmessage = function(msg) {
+          socket.onopen = function (msg) {
+
+          };
+
+          socket.onmessage = function (msg) {
+            // console.log(msg);
             const obj = JSON.parse(msg.data);
-            if(obj.event === "intro") {
+            if (obj.event === "intro") {
               data.map = obj.data.map;
               data.ticks = [];
-              for(const e of obj.data.ticks) {
-                for(const change of e.changes) {
+              for (const e of obj.data.ticks) {
+                for (const change of e.changes) {
                   data.map.grids[change.x * data.map.height + change.y].type = change.grid.type;
                   data.map.grids[change.x * data.map.height + change.y].soldiers = change.grid.soldiers;
                 }
               }
               setLoading(false);
-            }else if(obj.event === "update") {
+            } else if (obj.event === "update") {
               data.ticks.push(obj.data);
-            }else if(obj.event === "end") {
-              data.ticks.push({changes: []});
+            } else if (obj.event === "end") {
+              data.ticks.push({ changes: [] });
             }
           };
-          
-          socket.onclose = function(msg) {
-            if(loading === false) {
+
+          socket.onclose = function (msg) {
+            if (loading === false) {
               setLiveEnded(true);
               setLoading(true);
             }
           };
-          
-        }else {
+
+        } else {
           const ret = await get_games_details(contestId);
           cb(ret.data);
-          ret.data.ticks.push({changes: []})
+          ret.data.ticks.push({ changes: [] })
           console.log(ret.data);
           setData(ret.data);
           setLoading(false);
@@ -197,15 +285,15 @@ const Battle = () => {
       }
     })(setData);
   }, [contestId, get_games_details, setLoading]);
-  
+
   // return <>{loading ? <p>加载中</p> : <App map={data.map} ticks={data.ticks} />}</>;
-  
-  if(isLiveEnded) {
+
+  if (isLiveEnded) {
     return <>直播已结束</>;
-  }else if(loading) {
+  } else if (loading) {
     return <p>加载中</p>;
-  }else {
-    return <App map={data.map} ticks={data.ticks} live={isLive} />;
+  } else {
+    return <App map={data.map} ticks={data.ticks} live={isLive} r_user_id={r_user_id} b_user_id={b_user_id} />;
   }
 };
 
