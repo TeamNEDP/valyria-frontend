@@ -31,7 +31,7 @@ export default function Rightbar(props) {
     }, [id]);
     return (
         <>
-            <Grid item xs={12} sm={8} md={2.5} component={Paper} elevation={2} square>
+            <Grid item xs={12} sm={12} md={2.5} component={Paper} elevation={2} square>
                 <Box
                     sx={{
                         my: 8,

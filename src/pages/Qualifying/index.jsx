@@ -15,10 +15,8 @@ import { useRecoilValue } from 'recoil';
 import { useState } from 'react';
 function Qualifying() {
   const userInfo = useRecoilValue(UserInfoState);
-  const rating = useState(userInfo?.data.rating)
   return (
     <Grid container spacing={1} rowSpacing={3}>
-      <Toolbar />
       <Grid item md={12} >
         <Box sx={{ display: 'flex' }}>
           <Box
@@ -34,7 +32,7 @@ function Qualifying() {
 
                 <Grid item xs={12} md={3} lg={3}>
                   <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 240, }}>
-                    <AppWidgetSummary title="积分" total={rating} icon={'GradeIcon'} />
+                    <AppWidgetSummary title="积分" total={userInfo?.data.rating} icon={'GradeIcon'} />
 
                   </Paper>
                 </Grid>
@@ -69,7 +67,7 @@ function Qualifying() {
                   </Paper>
                   <CardMedia
                     component="img"
-                    sx={{ width: 360, display: { xs: 'none', sm: 'block' } }}
+                    sx={{ width: '100%', display: { xs: 'none', sm: 'block' } }}
                     image={logo}
                     alt={'logo'}
                   />

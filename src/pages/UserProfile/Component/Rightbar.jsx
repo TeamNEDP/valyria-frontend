@@ -13,7 +13,7 @@ import ChangeAvatar from '@/pages/UserProfile/Component/ChangeAvatar';
 export default function Rightbar() {
     const userInfo = useRecoilValue(UserInfoState);
     return (
-        <Grid item xs={12} sm={8} md={3} component={Paper} elevation={2} square>
+        <Grid item xs={12} sm={12} md={3} component={Paper} elevation={2} square>
             <Box
                 sx={{
                     my: 8,
@@ -21,6 +21,7 @@ export default function Rightbar() {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
+
                 }}
             >
                 <Avatar alt="Avatar" src={"/api/user/" + userInfo?.data.id + "/avatar"} sx={{ width: 140, height: 140 }} />
