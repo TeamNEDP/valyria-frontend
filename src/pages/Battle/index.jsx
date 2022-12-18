@@ -151,26 +151,20 @@ const Battle = () => {
   const [searchParams] = useSearchParams();
   const contestId = searchParams.get("id");
   const isLive = searchParams.get("live");
+  const [isLiveEnded, setLiveEnded] = useState(false);
   useEffect(() => {
     (async (cb) => {
       if(loading) {
         if(isLive === "true") {
           const socket = new WebSocket("ws://101.43.76.104:8000/api/games/" + contestId + "/live");
           
-          socket.onopen = function(msg) {
-            // console.log("ws connected");
-          };
+          socket.onopen = function(msg) {};
 
           socket.onmessage = function(msg) {
-            // console.log(msg);
             const obj = JSON.parse(msg.data);
-            // console.log(obj);
-            // console.log(obj.event);
             if(obj.event === "intro") {
-              // console.log("intro!");
               data.map = obj.data.map;
               data.ticks = [];
-              // console.log("set loading false");
               for(const e of obj.data.ticks) {
                 for(const change of e.changes) {
                   data.map.grids[change.x * data.map.height + change.y].type = change.grid.type;
@@ -181,13 +175,15 @@ const Battle = () => {
             }else if(obj.event === "update") {
               data.ticks.push(obj.data);
             }else if(obj.event === "end") {
-              // console.log("live ended");
               data.ticks.push({changes: []});
             }
           };
           
           socket.onclose = function(msg) {
-            // console.log("ws closed");
+            if(loading === false) {
+              setLiveEnded(true);
+              setLoading(true);
+            }
           };
           
         }else {
@@ -204,8 +200,10 @@ const Battle = () => {
   
   // return <>{loading ? <p>加载中</p> : <App map={data.map} ticks={data.ticks} />}</>;
   
-  if(loading) {
-    return <p>加载中1</p>;
+  if(isLiveEnded) {
+    return <>直播已结束</>;
+  }else if(loading) {
+    return <p>加载中</p>;
   }else {
     return <App map={data.map} ticks={data.ticks} live={isLive} />;
   }
