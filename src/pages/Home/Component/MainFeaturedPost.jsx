@@ -4,10 +4,13 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
-
+import logo from '@/logo/logo.svg';
 function MainFeaturedPost(props) {
-    const { post } = props;
-
+    const post = {
+        title: 'Valyria',
+        imageText: 'main image description',
+        linkText: '获取更多信息',
+    };
     return (
         <Paper
             sx={{
@@ -18,7 +21,7 @@ function MainFeaturedPost(props) {
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
-                backgroundImage: `url(${post.image})`,
+                backgroundImage: `url(${logo})`,
             }}
         >
             {/* Increase the priority of the hero background image */}
@@ -46,11 +49,16 @@ function MainFeaturedPost(props) {
                             {post.title}
                         </Typography>
                         <Typography variant="h5" color="inherit" paragraph>
-                            {post.description}
+                            Valyria 是基于{' '}
+                            <Link color="inherit" href="https://generals.io/">
+                                <i>generals.io</i>
+                            </Link>{' '}
+
+                            游戏规则的在线 AI 对战平台，玩家需要通过脚本语言编写自己的 AI 程序，与其他玩家的 AI 程序进行对战。
                         </Typography>
-                        <Link variant="subtitle1" href="#">
+                        {/* <Link variant="subtitle1" href="#">
                             {post.linkText}
-                        </Link>
+                        </Link> */}
                     </Box>
                 </Grid>
             </Grid>

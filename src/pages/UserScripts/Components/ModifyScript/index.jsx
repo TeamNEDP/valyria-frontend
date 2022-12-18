@@ -9,8 +9,6 @@ import {
   DialogTitle,
   Button,
 } from '@mui/material';
-import SaveIcon from "@mui/icons-material/Save";
-import DeleteIcon from "@mui/icons-material/Delete";
 import "./index.css"
 import { useState } from "react"
 import Editor from 'react-simple-code-editor';
@@ -22,7 +20,8 @@ import { createScript, listScripts, editScript, deleteScript } from "@/api/scrip
 import useMessage from "@/hooks/useMessage";
 import { ScriptsState } from "@/state/user";
 import { useSetRecoilState } from "recoil";
-
+import { useEffect } from 'react';
+import CodeEditor from '@uiw/react-textarea-code-editor';
 function ModifyScript(param) {
   const [code, setCode] = param.codeState;
   const [name, setName] = param.nameState;
@@ -30,7 +29,7 @@ function ModifyScript(param) {
   const [loading, setLoading] = useState(false);
   const [, { addMessage }] = useMessage();
   const setScripts = useSetRecoilState(ScriptsState);
-
+  const [myChange, setMyChange] = useState(false);
   const handleSave = () => {
     (async () => {
 
@@ -57,11 +56,16 @@ function ModifyScript(param) {
       }
     })();
   };
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (myChange) {
+        handleSave()
+        setMyChange(false)
+      }
+    }, 500)
 
-
-
-
-
+    return () => clearTimeout(delayDebounceFn)
+  })
   return (
     <Grid
       direction="column"
@@ -81,22 +85,32 @@ function ModifyScript(param) {
           name="script_name"
           type="text"
           value={name}
-          onChange={(arg) => { setName(arg.target.value); }}
+          onChange={(arg) => { setName(arg.target.value); setMyChange(true); }}
         />
       </Grid>
       <Grid>
         <Editor
           value={code}
-          onValueChange={code => { setCode(code) }}
-          onDoubleClick={handleSave}
+          onValueChange={code => { setCode(code), setMyChange(true) }}
           highlight={code => highlight(code, languages.js)}
           padding={10}
           style={{
             fontFamily: '"Fira code", "Fira Mono", monospace',
             fontSize: 18,
           }}
-
         />
+        {/* <CodeEditor
+          value={code}
+          language="js"
+          placeholder="Please enter JS code."
+          onChange={(evn) => { setCode(evn.target.value), setMyChange(true) }}
+          padding={20}
+          style={{
+            fontSize: 20,
+            backgroundColor: "#f5f5f5",
+            fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+          }}
+        /> */}
       </Grid>
     </Grid>
   );

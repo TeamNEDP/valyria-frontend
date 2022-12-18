@@ -35,9 +35,14 @@ export default function Gamesists() {
                             <TableCell>{moment(row.date * 1000).format("YYYY-MM-DD HH:mm:ss")}</TableCell>
 
                             <TableCell>
-                                {row.result == null ? <></> : row.result.winner == 'R' ?
-                                    <strong><p style={{ color: "blue", fontFamily: '楷体', letterSpacing: 15, fontSize: 15 }} >胜利</p></strong>
-                                    : <strong><p style={{ color: "red ", fontFamily: '楷体', letterSpacing: 15, fontSize: 15 }} >失败</p></strong>}
+                                {row.result == null ? <></> : row.official ? row.result.winner == row.role ?
+                                    <i><strong><p style={{ color: "blue", fontSize: 15 }} >Victory</p></strong></i>
+                                    : <i><strong><p style={{ color: "red ", fontSize: 15 }} >Defeat</p></strong></i>
+                                    : row.result.winner == 'B' ?
+                                        <i><strong><p style={{ color: "blue", fontSize: 15 }} >Blue Wins</p></strong></i>
+                                        : <i><strong><p style={{ color: "red ", fontSize: 15 }} >Red Wins</p></strong></i>
+
+                                }
                             </TableCell>
                             <TableCell align="center">
                                 <Chip
@@ -58,9 +63,9 @@ export default function Gamesists() {
                                     }
                                 />
                             </TableCell>
-                            <TableCell align="right"> {row.offical ?
+                            <TableCell align="right"> {row.official ?
                                 <p>排位赛</p>
-                                : <p>常规赛</p>}</TableCell>
+                                : <p>自定义比赛</p>}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

@@ -14,9 +14,6 @@ export async function get_competition() {
   return (await instance.get("/api/competition")).data;
 }
 
-export async function post_competition(string) {
- return await instance.post("/api/competition",{
-    string,
-  }
- );
+export async function post_competition(param) {
+  return await instance.post("/api/competition", param === null ? "null" : '"' + param + '"');
 }

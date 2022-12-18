@@ -6,10 +6,19 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Rating from './Component/Setting';
 import AppWidgetSummary from './Component/AppWidgetSummary';
-import Chart from './Component/Chart';
+import MyChart from './Component/Chart';
+import { Toolbar, } from "@mui/material";
+import CardMedia from '@mui/material/CardMedia';
+import logo from '@/logo/logo.svg';
+import { UserInfoState } from '@/state/user';
+import { useRecoilValue } from 'recoil';
+import { useState } from 'react';
 function Qualifying() {
+  const userInfo = useRecoilValue(UserInfoState);
+  const rating = useState(userInfo?.data.rating)
   return (
     <Grid container spacing={1} rowSpacing={3}>
+      <Toolbar />
       <Grid item md={12} >
         <Box sx={{ display: 'flex' }}>
           <Box
@@ -22,33 +31,35 @@ function Qualifying() {
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>
                 {/* 积分*/}
+
                 <Grid item xs={12} md={3} lg={3}>
                   <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 240, }}>
-                    <AppWidgetSummary title="积分" total={714000} icon={'ant-design:android-filled'} />
+                    <AppWidgetSummary title="积分" total={rating} icon={'GradeIcon'} />
+
                   </Paper>
                 </Grid>
                 {/* 总对局数*/}
                 <Grid item xs={12} md={3} lg={3}>
                   <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 240, }}>
-                    <AppWidgetSummary title="总对局数" total={25} color="info" icon={'ant-design:apple-filled'} />
+                    <AppWidgetSummary title="总对局数" total={25} color="info" icon={'SportsEsportsIcon'} />
                   </Paper>
                 </Grid>
                 {/* 胜场*/}
                 <Grid item xs={12} md={3} lg={3}>
                   <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 240, }}>
-                    <AppWidgetSummary title="总胜场数" total={12} color="warning" icon={'ant-design:windows-filled'} />
+                    <AppWidgetSummary title="总胜场数" total={12} color="warning" icon={'EmojiEventsIcon'} />
                   </Paper>
                 </Grid>
                 {/* 败场*/}
                 <Grid item xs={12} md={3} lg={3}>
                   <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 240, }}>
-                    <AppWidgetSummary title="总败场数" total={5} color="error" icon={'ant-design:bug-filled'} />
+                    <AppWidgetSummary title="总败场数" total={5} color="error" icon={'GppBadIcon'} />
                   </Paper>
                 </Grid>
                 {/* 图*/}
                 <Grid item xs={12} md={8} lg={8}>
-                  <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 240, }}>
-                    <Chart />
+                  <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                    <MyChart />
                   </Paper>
                 </Grid>
                 {/* Rating*/}
@@ -56,7 +67,14 @@ function Qualifying() {
                   <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 240, }}>
                     <Rating />
                   </Paper>
+                  <CardMedia
+                    component="img"
+                    sx={{ width: 360, display: { xs: 'none', sm: 'block' } }}
+                    image={logo}
+                    alt={'logo'}
+                  />
                 </Grid>
+
               </Grid>
 
             </Container>

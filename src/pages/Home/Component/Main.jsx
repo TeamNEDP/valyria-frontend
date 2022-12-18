@@ -3,9 +3,9 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Markdown from './Markdown';
-
+import Link from '@mui/material/Link';
 function Main(props) {
-    const { posts, title } = props;
+    const { title, archives } = props;
 
     return (
         <Grid
@@ -18,16 +18,17 @@ function Main(props) {
                 },
             }}
         >
-            <Typography variant="h6" gutterBottom>
-                {title}
+            <Typography variant="h5" gutterBottom>
+                <strong>{title}</strong>
             </Typography>
             <Divider />
-            {posts.map((post) => (
-                // <Markdown className="markdown" key={post.substring(0, 40)}>
-                <Markdown className="markdown" key={1}>
-                    {post}
-                </Markdown>
+            {archives.map((archive) => (
+                <i>{archive.title}</i>
+                // <Link display="block" variant="body1" href={archive.url} key={archive.title}>
+                //     {archive.title}
+                // </Link>
             ))}
+
         </Grid>
     );
 }

@@ -27,8 +27,8 @@ function Board(param) {
             i,
             j,
             blockLength,
-            map.grids[i * map.width + j].type,
-            map.grids[i * map.width + j].soldiers,
+            map.grids[i * map.height + j].type,
+            map.grids[i * map.height + j].soldiers,
             startPoint.x,
             startPoint.y,
           )
@@ -62,8 +62,8 @@ const Game = (param) => {
       return;
     }
     for (const change of param.tick.changes) {
-      param.map.grids[change.x * param.map.width + change.y].type = change.grid.type;
-      param.map.grids[change.x * param.map.width + change.y].soldiers = change.grid.soldiers;
+      param.map.grids[change.x * param.map.height + change.y].type = change.grid.type;
+      param.map.grids[change.x * param.map.height + change.y].soldiers = change.grid.soldiers;
     }
   }, [param.tick]);
 
@@ -78,9 +78,10 @@ const App = (param) => {
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  const live = param.live;
 
   useEffect(() => {
-    if(tick + 1 >= param.ticks.length) {
+    if(live && tick + 1 >= param.ticks.length) {
       setAuto(false);
     }
   }, [tick, setAuto]);
@@ -89,6 +90,10 @@ const App = (param) => {
     if(auto && tick + 1 < param.ticks.length) {
       setTimeout(() => {
         setTick(tick + 1);
+      }, 100);
+    }else if(auto && live) {
+      setTimeout(() => {
+        setTick(tick);
       }, 100);
     }
   }, [tick, setTick, auto]);
@@ -128,7 +133,10 @@ const App = (param) => {
       <Stage width={windowSize.width} height={windowSize.height - 64 - 24 * 2}>
         <Layer>
           <Board map={param.map} width={windowSize.width} height={windowSize.height - 64 - 24 * 2}/>
-          <Game map={param.map} tick={param.ticks[tick]} />
+          { (() => {
+            if(param.ticks.length >= 1) return <Game map={param.map} tick={param.ticks[tick]} />;
+            else return <></>;
+          })() }
         </Layer>
       </Stage>
     </>
@@ -140,13 +148,46 @@ const Battle = () => {
   const [data, setData] = useState({});
   const [searchParams] = useSearchParams();
   const contestId = searchParams.get("id");
+  const isLive = searchParams.get("live");
   useEffect(() => {
     (async (cb) => {
       if(loading) {
-        const ret = await get_games_details(contestId);
-        cb(ret.data);
-        setData(ret.data);
-        setLoading(false);
+        if(isLive === "true") {
+          const socket = new WebSocket("ws://101.43.76.104:8000/api/games/" + contestId + "/live");
+          
+          socket.onopen = function(msg) {
+            // console.log("ws connected");
+          };
+
+          socket.onmessage = function(msg) {
+            // console.log(msg);
+            const obj = JSON.parse(msg.data);
+            // console.log(obj);
+            // console.log(obj.event);
+            if(obj.event === "intro") {
+              // console.log("intro!");
+              data.map = obj.data.map;
+              data.ticks = [];
+              // console.log("set loading false");
+              setLoading(false);
+            }else if(obj.event === "update") {
+              data.ticks.push(obj.data);
+            }else if(obj.event === "end") {
+              // console.log("live ended");
+            }
+          };
+          
+          socket.onclose = function(msg) {
+            // console.log("ws closed");
+          };
+          
+        }else {
+          const ret = await get_games_details(contestId);
+          cb(ret.data);
+          // console.log(ret.data);
+          setData(ret.data);
+          setLoading(false);
+        }
       }
     })(setData);
   }, [contestId, get_games_details, setLoading]);
@@ -154,9 +195,9 @@ const Battle = () => {
   // return <>{loading ? <p>加载中</p> : <App map={data.map} ticks={data.ticks} />}</>;
   
   if(loading) {
-    return <p>加载中</p>;
+    return <p>加载中1</p>;
   }else {
-    return <App map={data.map} ticks={data.ticks} />;
+    return <App map={data.map} ticks={data.ticks} live={isLive} />;
   }
 };
 
