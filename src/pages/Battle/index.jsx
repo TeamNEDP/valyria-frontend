@@ -9,7 +9,7 @@ import "./index.css"
 import { draw } from "./Components/blocks"
 import logo from '@/logo/logo.svg';
 import Paper from '@mui/material/Paper';
-
+import { Toolbar } from "@mui/material";
 import { Button, ButtonGroup } from '@mui/material';
 import Rightbar from './Component/Rightbar';
 import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
@@ -289,11 +289,11 @@ const Battle = () => {
   // return <>{loading ? <p>加载中</p> : <App map={data.map} ticks={data.ticks} />}</>;
 
   if (isLiveEnded) {
-    return <>直播已结束</>;
+    return <><Toolbar></Toolbar>直播已结束</>;
   } else if (loading) {
-    return <p>加载中</p>;
+    return <><Toolbar></Toolbar><p>加载中</p></>;
   } else {
-    return <App map={data.map} ticks={data.ticks} live={isLive} r_user_id={r_user_id} b_user_id={b_user_id} />;
+    return <><Toolbar></Toolbar><App map={data.map} ticks={data.ticks} live={isLive} r_user_id={r_user_id} b_user_id={b_user_id} /></>;
   }
 };
 
