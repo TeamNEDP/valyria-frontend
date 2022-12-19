@@ -131,6 +131,7 @@ function UserScripts() {
           },
         }}
       >
+        <Toolbar></Toolbar>
         <ModifyScript nameState={[name, setName]} codeState={[code, setCode]} originState={[originName, setOriginName]} />
       </Grid>
       {dialog}

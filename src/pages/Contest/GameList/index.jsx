@@ -52,7 +52,7 @@ import { fontFamily, letterSpacing } from "@mui/system";
 import blueicon from '@/pages/Contest/blue.svg'
 import redicon from '@/pages/Contest/red.svg'
 import greyicon from '@/pages/Contest/grey.svg'
-
+import { Toolbar, } from "@mui/material";
 function Row(props) {
   //列表子项
   const { row } = props;
@@ -60,6 +60,7 @@ function Row(props) {
   const navigate = useNavigate();
   return (
     <React.Fragment >
+
       <TableRow sx={{
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -73,13 +74,13 @@ function Row(props) {
                 `url(${redicon})` : `url(${greyicon})`
       }}>
         <TableCell >
-            <IconButton
-              aria-label="expand row"
-              size="small"
-              onClick={() => setOpen(!open)}
-            >
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-            </IconButton>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
         </TableCell>
         <TableCell component="th" scope="row" align="justify">
           <Chip icon={<AccessTimeIcon />} sx={{ 'fontWeight': 'bolder', 'backgroundColor': 'white' }} variant="outlined" label={moment(row.date * 1000).format("YYYY-MM-DD HH:mm:ss")} />{""}
@@ -275,7 +276,7 @@ export default function GameList() {
   const [row1, setRow] = useState(20);
   return (
     <Grid container>
-
+      <Toolbar />
       <TableContainer component={Paper} sx={{ boxShadow: 10 }} >
         <Table  >
           <TableHead >

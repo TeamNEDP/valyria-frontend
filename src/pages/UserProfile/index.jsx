@@ -1,30 +1,15 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
 import Chart from './Component/Chart';
 import Rating from './Component/Rating';
 import Gamelist from './Component/Gamelist';
 import DefaultState from './Component/DefaultState';
 import Rightbar from './Component/Rightbar'
-
-function Copyright(props) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-
-            Your Website.
-
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
-
+import { Toolbar } from '@mui/material';
 const mdTheme = createTheme();
 const UserProfile = () => {
     return (
@@ -33,6 +18,7 @@ const UserProfile = () => {
 
             <DefaultState />
             <Grid item md={9} >
+
 
                 <ThemeProvider theme={mdTheme}>
                     <Box sx={{ display: 'flex' }}>
