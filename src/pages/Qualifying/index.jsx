@@ -17,6 +17,7 @@ function Qualifying() {
   const userInfo = useRecoilValue(UserInfoState);
   return (
     <Grid container spacing={1} rowSpacing={3}>
+      <Toolbar />
       <Grid item md={12} >
         <Box sx={{ display: 'flex' }}>
           <Box

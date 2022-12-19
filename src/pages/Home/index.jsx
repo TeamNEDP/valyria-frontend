@@ -63,6 +63,7 @@ export default function HomePage() {
   return (
     <ThemeProvider theme={theme}>
       <Container maxWidth="lg">
+        <Toolbar />
         <main>
           <MainFeaturedPost />
           <Grid container spacing={4}>

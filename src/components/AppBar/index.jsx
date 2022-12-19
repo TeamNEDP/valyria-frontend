@@ -60,7 +60,7 @@ function SiteAppBar() {
   };
 
   return (
-    <AppBar position="sticky" sx={{ height: 64 }}>
+    <AppBar position="fixed" sx={{ height: 64 }}>
       <Toolbar>
         <Typography
           variant="h6"
@@ -88,7 +88,7 @@ function SiteAppBar() {
         {loading ? <></> : (userInfo === null ?
           <AppBarButton content="登录 / 注册" rightSide to="/login" displayInXS={true} />
           :
-          <AppBarButton content={userInfo.data.name} rightSide onClick={handleClick} displayInXS={true}/>
+          <AppBarButton content={userInfo.data.name} rightSide onClick={handleClick} displayInXS={true} />
         )}
       </Toolbar>
       <Menu

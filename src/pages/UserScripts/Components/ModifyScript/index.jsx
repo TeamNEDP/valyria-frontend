@@ -74,7 +74,7 @@ function ModifyScript(param) {
       fullWidth
     >
       <Grid>
-        <Grid item xs><h1><strong >{originName === null ? "新建脚本" : "编辑脚本"}</strong></h1></Grid>
+        {/* <Grid item xs><h1><strong >{originName === null ? "新建脚本" : "编辑脚本"}</strong></h1></Grid> */}
 
 
       </Grid>
@@ -95,7 +95,7 @@ function ModifyScript(param) {
           highlight={code => highlight(code, languages.js)}
           padding={10}
           style={{
-            fontFamily: '"Fira code", "Fira Mono", monospace',
+            fontFamily: 'Consolas',
             fontSize: 18,
           }}
         />
