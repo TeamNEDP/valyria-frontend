@@ -190,7 +190,7 @@ function Row(props) {
                       endIcon={<SendIcon />}
                       onClick={() => {
 
-                        navigate("/battle?id=" + row.id + "&live=true");
+                        navigate("/battle?id=" + row.id + "&live=true" + '&r_user_id=' + row.r_user_id + '&b_user_id=' + row.b_user_id);
                       }}
                     >
                       直播

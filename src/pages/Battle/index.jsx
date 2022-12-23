@@ -185,8 +185,7 @@ const App = (param) => {
 
 
           </Grid>
-
-          <Grid item md={12} xs={12} elevation={2} >
+          {live ? setAuto(true) : <Grid item md={12} xs={12} elevation={2} >
             <Grid container spacing={2}  >
               <Grid item md={1} xs={1}>
                 <LabelOutlinedIcon color="primary" />
@@ -229,7 +228,8 @@ const App = (param) => {
                 </ButtonGroup>
               </Grid>
             </Grid>
-          </Grid>
+          </Grid>}
+
         </Grid>
 
         <Rightbar id={b_user_id} role={'B'}></Rightbar>
