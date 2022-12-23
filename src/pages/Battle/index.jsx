@@ -83,6 +83,8 @@ const Game = (param) => {
 const App = (param) => {
   const [tick, setTick] = useState(0);
   const [auto, setAuto] = useState(false);
+  const [auto2, setAuto2] = useState(false);
+  const [auto3, setAuto3] = useState(false);
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -93,6 +95,9 @@ const App = (param) => {
   const b_user_id = param.b_user_id;
   const handleSliderChange = (event, newValue) => {
     setTick(newValue);
+    setAuto(false);
+    setAuto2(true);
+    // setAuto(true);
   };
   const handleInputChange = (event) => {
     setTick(event.target.value === '' ? '' : Number(event.target.value));
@@ -125,7 +130,15 @@ const App = (param) => {
       }, 100 / speed);
     }
   }, [tick, setTick, auto]);
-
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (auto2 && auto3) {
+        setAuto(true);
+        setAuto2(false);
+      }
+    }, 500)
+    return () => clearTimeout(delayDebounceFn)
+  })
   useEffect(() => {
     const handleResize = () => {
       setWindowSize({
@@ -211,7 +224,7 @@ const App = (param) => {
                   <Button onClick={() => { setSpeed(1), console.log(speed) }}>X1</Button>
                   <Button onClick={() => setSpeed(5)}>X5</Button>
                   <Button onClick={() => { setSpeed(10), console.log(speed) }}>X10</Button>
-                  <Button variant="contained" onClick={() => { setAuto(!auto); }}
+                  <Button variant="contained" onClick={() => { setAuto(!auto); setAuto3(!auto3) }}
                   >{auto ? "停止播放" : "开启播放"}</Button>
                 </ButtonGroup>
               </Grid>
