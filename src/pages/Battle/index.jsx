@@ -140,6 +140,11 @@ const App = (param) => {
     return () => clearTimeout(delayDebounceFn)
   })
   useEffect(() => {
+    if (live) {
+      setAuto(true);
+    }
+  })
+  useEffect(() => {
     const handleResize = () => {
       setWindowSize({
         width: window.innerWidth,
@@ -185,7 +190,7 @@ const App = (param) => {
 
 
           </Grid>
-          {live ? setAuto(true) : <Grid item md={12} xs={12} elevation={2} >
+          {live ? <></> : <Grid item md={12} xs={12} elevation={2} >
             <Grid container spacing={2}  >
               <Grid item md={1} xs={1}>
                 <LabelOutlinedIcon color="primary" />
