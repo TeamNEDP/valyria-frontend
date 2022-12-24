@@ -107,11 +107,7 @@ const App = (param) => {
       setAuto(false);
     }
   }, [tick, setAuto]);
-  useEffect(() => {
-    if (live) {
-      setAuto(true);
-    }
-  }, [live, setAuto]);
+
   const handleBlur = () => {
     if (tick < 1) {
       setTick(1);
@@ -136,6 +132,9 @@ const App = (param) => {
       if (auto2 && auto3) {
         setAuto(true);
         setAuto2(false);
+      }
+      if (live) {
+        setAuto(true);
       }
     }, 500)
     return () => clearTimeout(delayDebounceFn)
