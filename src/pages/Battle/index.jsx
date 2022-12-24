@@ -107,7 +107,11 @@ const App = (param) => {
       setAuto(false);
     }
   }, [tick, setAuto]);
-
+  useEffect(() => {
+    if (live) {
+      setAuto(true);
+    }
+  }, [live, setAuto]);
   const handleBlur = () => {
     if (tick < 1) {
       setTick(1);
