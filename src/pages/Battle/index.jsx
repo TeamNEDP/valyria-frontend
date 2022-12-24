@@ -185,7 +185,7 @@ const App = (param) => {
 
 
           </Grid>
-          {live ? <></> : <Grid item md={12} xs={12} elevation={2} >
+          {<Grid item md={12} xs={12} elevation={2} >
             <Grid container spacing={2}  >
               <Grid item md={1} xs={1}>
                 <LabelOutlinedIcon color="primary" />
