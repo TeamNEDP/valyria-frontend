@@ -82,7 +82,6 @@ const Game = (param) => {
 
 const App = (param) => {
   const [tick, setTick] = useState(0);
-  const [auto, setAuto] = useState(false);
   const [auto2, setAuto2] = useState(false);
   const [auto3, setAuto3] = useState(false);
   const [windowSize, setWindowSize] = useState({
@@ -91,6 +90,7 @@ const App = (param) => {
   });
   const [speed, setSpeed] = useState(1);
   const live = param.live;
+  const [auto, setAuto] = useState(live);
   const r_user_id = param.r_user_id;
   const b_user_id = param.b_user_id;
   const handleSliderChange = (event, newValue) => {
@@ -138,11 +138,6 @@ const App = (param) => {
       }
     }, 500)
     return () => clearTimeout(delayDebounceFn)
-  })
-  useEffect(() => {
-    if (live) {
-      setAuto(true);
-    }
   })
   useEffect(() => {
     const handleResize = () => {
