@@ -103,9 +103,6 @@ const App = (param) => {
     setTick(event.target.value === '' ? '' : Number(event.target.value));
   };
   useEffect(() => {
-    if (live && tick + 1 >= param.ticks.length) {
-      setAuto(false);
-    }
     if (!live && tick + 1 >= param.ticks.length) {
       setAuto(false);
     }
@@ -185,7 +182,7 @@ const App = (param) => {
 
 
           </Grid>
-          {<Grid item md={12} xs={12} elevation={2} >
+          {live ? <></> : <Grid item md={12} xs={12} elevation={2} >
             <Grid container spacing={2}  >
               <Grid item md={1} xs={1}>
                 <LabelOutlinedIcon color="primary" />
